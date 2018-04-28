@@ -15,6 +15,7 @@ package org.jdbi.v3.freemarker;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import freemarker.template.Template;
 
@@ -50,7 +51,9 @@ public class FreemarkerSqlLocator {
      */
     public static File findTemplateDirectory(Class<?> type) {
         try {
-			return new File(type.getClassLoader().getResource(type.getName().replaceAll(".", "/")).toURI());
+			String classFolder = type.getName().replace(".", "/");
+			URL resource = type.getClassLoader().getResource(classFolder);
+			return new File(resource.toURI());
 		} catch (URISyntaxException e) {
 			return null;
 		}
