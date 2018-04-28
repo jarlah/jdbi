@@ -50,8 +50,7 @@ public class UseFreemarkerSqlLocatorImpl implements Configurer {
             Template template = findTemplate(templateDirectory, templateName);
             StringWriter writer = new StringWriter();
             try {
-                // TODO pass attributes
-                template.process(null, writer);
+                template.process(ctx.getAttributes(), writer);
                 return writer.toString();
             } catch (TemplateException | IOException e) {
                 throw new IllegalStateException("Failed to render template " + templateName);
