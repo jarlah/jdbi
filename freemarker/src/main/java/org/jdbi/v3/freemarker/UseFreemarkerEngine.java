@@ -11,16 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.stringtemplate4;
+package org.jdbi.v3.freemarker;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jdbi.v3.freemarker.internal.UseFreemarkerEngineImpl;
 import org.jdbi.v3.sqlobject.config.ConfiguringAnnotation;
 import org.jdbi.v3.sqlobject.customizer.Define;
-import org.jdbi.v3.stringtemplate4.internal.UseFreemarkerEngineImpl;
 
 /**
  * Configures a SQL object class or method to rewrite SQL statements using StringTemplate. Method parameters annotated

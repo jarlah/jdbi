@@ -11,14 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.stringtemplate4.internal;
+package org.jdbi.v3.freemarker.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import org.jdbi.v3.core.config.ConfigRegistry;
 import org.jdbi.v3.core.statement.SqlStatements;
+import org.jdbi.v3.freemarker.FreemarkerEngine;
 import org.jdbi.v3.sqlobject.config.Configurer;
-import org.jdbi.v3.stringtemplate4.FreemarkerEngine;
 
 public class UseFreemarkerEngineImpl implements Configurer {
     @Override

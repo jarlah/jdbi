@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.stringtemplate4;
+package org.jdbi.v3.freemarker;
 
 import org.jdbi.v3.core.statement.TemplateEngine;
 import org.jdbi.v3.core.statement.StatementContext;

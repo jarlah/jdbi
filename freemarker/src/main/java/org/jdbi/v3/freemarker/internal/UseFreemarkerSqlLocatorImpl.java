@@ -11,7 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.stringtemplate4.internal;
+package org.jdbi.v3.freemarker.internal;
+
+import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.findTemplateDirectory;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -24,7 +26,6 @@ import org.jdbi.v3.sqlobject.SqlObjects;
 import org.jdbi.v3.sqlobject.config.Configurer;
 import org.jdbi.v3.sqlobject.internal.SqlAnnotations;
 import org.jdbi.v3.sqlobject.locator.SqlLocator;
-import static org.jdbi.v3.stringtemplate4.FreemarkerSqlLocator.findTemplateDirectory;
 
 public class UseFreemarkerSqlLocatorImpl implements Configurer {
     @Override
