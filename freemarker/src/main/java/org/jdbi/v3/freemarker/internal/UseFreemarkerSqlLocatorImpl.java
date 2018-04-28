@@ -13,11 +13,11 @@
  */
 package org.jdbi.v3.freemarker.internal;
 
-import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.findTemplateDirectory;
+import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.*;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -30,29 +30,31 @@ import org.jdbi.v3.sqlobject.internal.SqlAnnotations;
 import org.jdbi.v3.sqlobject.locator.SqlLocator;
 
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class UseFreemarkerSqlLocatorImpl implements Configurer {
     @Override
     public void configureForType(ConfigRegistry registry, Annotation annotation, Class<?> sqlObjectType) {
         SqlLocator locator = (type, method, config) -> {
             String templateName = SqlAnnotations.getAnnotationValue(method, sql -> sql).orElseGet(method::getName);
-            File directory = findTemplateDirectory(sqlObjectType);
-            if (directory == null 
-            		|| !directory.exists() 
-            		|| !new File(directory, templateName + ".ftl").exists()) {
-                throw new IllegalStateException("No Freemarker template " + templateName + " for class " + sqlObjectType);
+            File templateDirectory = findTemplateDirectory(sqlObjectType);
+            if (templateDirectory == null || !templateDirectory.exists()
+                    || findTemplate(templateDirectory, templateName) == null) {
+                throw new IllegalStateException(
+                        "No Freemarker template " + templateName + " for class " + sqlObjectType);
             }
             return templateName;
         };
         TemplateEngine templateEngine = (templateName, ctx) -> {
             File templateDirectory = findTemplateDirectory(sqlObjectType);
-            File templateFile = new File(templateDirectory, templateName + ".ftl");
+            Template template = findTemplate(templateDirectory, templateName);
+            StringWriter writer = new StringWriter();
             try {
-                Template tmeplate = new Template(templateName, new FileReader(templateFile), null);
-                // TODO do something
-                return null;
-            } catch (IOException e) {
-                return null;
+                // TODO pass attributes
+                template.process(null, writer);
+                return writer.toString();
+            } catch (TemplateException | IOException e) {
+                throw new IllegalStateException("Failed to render template " + templateName);
             }
         };
         registry.get(SqlObjects.class).setSqlLocator(locator);

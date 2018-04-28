@@ -14,41 +14,31 @@
 package org.jdbi.v3.freemarker;
 
 import java.io.File;
+import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import freemarker.template.Template;
+import net.jodah.expiringmap.ExpirationPolicy;
+import net.jodah.expiringmap.ExpiringMap;
 
 /**
- * Locates SQL in <code>.sql.stg</code> StringTemplate group files on the classpath.
+ * Locates SQL in <code>.ftl/code> Freemarker files on the classpath.
  */
 public class FreemarkerSqlLocator {
+    private static final Map<String, Template> CACHE = ExpiringMap.builder()
+            .expiration(10, TimeUnit.MINUTES)
+            .expirationPolicy(ExpirationPolicy.ACCESSED)
+            .build();
     
     private FreemarkerSqlLocator() {}
 
-    /**
-     * Locates SQL for the given type and name. Example: Given a type <code>com.foo.Bar</code> and a name of
-     * <code>baz</code>, loads a StringTemplate group file from the resource named <code>com/foo/Bar.sql.stg</code> on
-     * the classpath, and returns the template with the given name from the group.
-     *
-     * @param type the type that "owns" the given StringTemplate group file. Dictates the filename of the
-     *             StringTemplate group file on the classpath.
-     * @param name the template name within the StringTemplate group.
-     * @return the located SQL.
-     */
     public static Template findStringTemplate(Class<?> type, String name) {
         return null;
     }
     
-    /**
-     * Loads the StringTemplateGroup for the given type. Example: Given a type <code>com.foo.Bar</code>, returns a
-     * StringTemplateGroup loaded from the resource named <code>com/foo/Bar.sql.stg</code> on the classpath.
-     *
-     * @param type the type that "owns" the given StringTemplate group file. Dictates the filename of the
-     *             StringTemplate group file on the classpath.
-     * @return the loaded StringTemplateGroup.
-     * @throws URISyntaxException 
-     */
     public static File findTemplateDirectory(Class<?> type) {
         try {
 			String classFolder = type.getName().replace(".", "/");
@@ -60,4 +50,15 @@ public class FreemarkerSqlLocator {
 		return null;
     }
 
+    public static Template findTemplate(File templateDirectory, String templateName) {
+        File templateFile = new File(templateDirectory, templateName + ".ftl");
+        return CACHE.computeIfAbsent(templateFile.getPath(), (p) -> {
+            try {
+                if (templateFile.exists()) {
+                    return new Template(templateName, new FileReader(templateFile), null);
+                }
+            } catch (Exception e) {}
+            throw new IllegalStateException("Failed to load Freemarker template " + templateName + " in " + templateDirectory.getAbsolutePath());
+        });
+    }
 }
