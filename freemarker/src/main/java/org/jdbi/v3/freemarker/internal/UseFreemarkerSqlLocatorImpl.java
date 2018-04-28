@@ -16,6 +16,8 @@ package org.jdbi.v3.freemarker.internal;
 import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.findTemplateDirectory;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -26,6 +28,8 @@ import org.jdbi.v3.sqlobject.SqlObjects;
 import org.jdbi.v3.sqlobject.config.Configurer;
 import org.jdbi.v3.sqlobject.internal.SqlAnnotations;
 import org.jdbi.v3.sqlobject.locator.SqlLocator;
+
+import freemarker.template.Template;
 
 public class UseFreemarkerSqlLocatorImpl implements Configurer {
     @Override
@@ -41,7 +45,15 @@ public class UseFreemarkerSqlLocatorImpl implements Configurer {
             return templateName;
         };
         TemplateEngine templateEngine = (templateName, ctx) -> {
-            return null;
+            File templateDirectory = findTemplateDirectory(sqlObjectType);
+            File templateFile = new File(templateDirectory, templateName + ".ftl");
+            try {
+                Template tmeplate = new Template(templateName, new FileReader(templateFile), null);
+                // TODO do something
+                return null;
+            } catch (IOException e) {
+                return null;
+            }
         };
         registry.get(SqlObjects.class).setSqlLocator(locator);
         registry.get(SqlStatements.class).setTemplateEngine(templateEngine);
