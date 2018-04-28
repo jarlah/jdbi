@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
@@ -33,6 +34,8 @@ public class FreemarkerSqlLocator {
             .expirationPolicy(ExpirationPolicy.ACCESSED)
             .build();
     
+    private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_28);
+
     private FreemarkerSqlLocator() {}
 
     public static Template findStringTemplate(Class<?> type, String name) {
@@ -55,7 +58,7 @@ public class FreemarkerSqlLocator {
         return CACHE.computeIfAbsent(templateFile.getPath(), (p) -> {
             try {
                 if (templateFile.exists()) {
-                    return new Template(templateName, new FileReader(templateFile), null);
+                    return new Template(templateName, new FileReader(templateFile), CONFIGURATION);
                 }
             } catch (Exception e) {}
             throw new IllegalStateException("Failed to load Freemarker template " + templateName + " in " + templateDirectory.getAbsolutePath());
