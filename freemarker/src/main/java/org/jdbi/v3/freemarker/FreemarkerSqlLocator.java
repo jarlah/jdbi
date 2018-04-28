@@ -50,7 +50,7 @@ public class FreemarkerSqlLocator {
      */
     public static File findTemplateDirectory(Class<?> type) {
         try {
-			return new File(type.getClassLoader().getResource(type.getName()).toURI());
+			return new File(type.getClassLoader().getResource(type.getName().replaceAll(".", "/")).toURI());
 		} catch (URISyntaxException e) {
 			return null;
 		}
