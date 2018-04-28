@@ -53,10 +53,11 @@ public class FreemarkerSqlLocator {
         try {
 			String classFolder = type.getName().replace(".", "/");
 			URL resource = type.getClassLoader().getResource(classFolder);
-			return new File(resource.toURI());
-		} catch (URISyntaxException e) {
-			return null;
-		}
+			if (resource != null) {
+				return new File(resource.toURI());
+			}
+		} catch (URISyntaxException ignored) {}
+		return null;
     }
 
 }
