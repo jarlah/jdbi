@@ -1,0 +1,1 @@
+insert into ${table} (${id_column}, ${value_column}) values (:id, :value)

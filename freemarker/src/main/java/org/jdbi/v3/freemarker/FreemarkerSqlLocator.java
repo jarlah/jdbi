@@ -54,7 +54,7 @@ public class FreemarkerSqlLocator {
     }
 
     public static Template findTemplate(File templateDirectory, String templateName) {
-        File templateFile = new File(templateDirectory, templateName + ".ftl");
+        File templateFile = new File(templateDirectory, templateName + ".sql.ftl");
         return CACHE.computeIfAbsent(templateFile.getPath(), (p) -> {
             try {
                 if (templateFile.exists()) {
