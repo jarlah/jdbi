@@ -23,9 +23,7 @@
 
     <artifactId>jdbi3-freemarker</artifactId>
     <name>jdbi3 Freemarker integration</name>
-    <description>
-        jdbi-stringtemplate4 locates SQL statements in Freemarker files on the classpath
-    </description>
+    <description>jdbi-freemarker locates SQL statements in Freemarker files on the classpath</description>
     <url>http://jdbi.org/</url>
 
     <licenses>
