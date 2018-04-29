@@ -38,16 +38,12 @@ public class UseFreemarkerSqlLocatorImpl implements Configurer {
         SqlLocator locator = (type, method, config) -> {
             String templateName = SqlAnnotations.getAnnotationValue(method, sql -> sql).orElseGet(method::getName);
             File templateDirectory = findTemplateDirectory(sqlObjectType);
-            if (templateDirectory == null || !templateDirectory.exists()
-                    || findTemplate(templateDirectory, templateName) == null) {
-                throw new IllegalStateException(
-                        "No Freemarker template " + templateName + " for class " + sqlObjectType);
-            }
+            findTemplateOrFail(templateDirectory, templateName);
             return templateName;
         };
         TemplateEngine templateEngine = (templateName, ctx) -> {
             File templateDirectory = findTemplateDirectory(sqlObjectType);
-            Template template = findTemplate(templateDirectory, templateName);
+            Template template = findTemplateOrFail(templateDirectory, templateName);
             StringWriter writer = new StringWriter();
             try {
                 template.process(ctx.getAttributes(), writer);

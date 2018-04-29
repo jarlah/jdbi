@@ -53,7 +53,7 @@ public class FreemarkerSqlLocator {
 		return null;
     }
 
-    public static Template findTemplate(File templateDirectory, String templateName) {
+    public static Template findTemplateOrFail(File templateDirectory, String templateName) {
         File templateFile = new File(templateDirectory, templateName + ".sql.ftl");
         return CACHE.computeIfAbsent(templateFile.getPath(), (p) -> {
             Exception ex;
@@ -61,7 +61,7 @@ public class FreemarkerSqlLocator {
                 if (templateFile.exists()) {
                     return new Template(templateName, new FileReader(templateFile), CONFIGURATION);
                 }
-                ex = new IllegalStateException("Template file " + templateFile.getPath() + " does not exist");
+                ex = new IllegalArgumentException("Template file " + templateFile.getPath() + " does not exist");
             } catch (Exception templateLoadingException) {
                 ex = templateLoadingException;
             }
