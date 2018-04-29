@@ -38,6 +38,9 @@ public class UseFreemarkerSqlLocatorImpl implements Configurer {
         SqlLocator locator = (type, method, config) -> {
             String templateName = SqlAnnotations.getAnnotationValue(method, sql -> sql).orElseGet(method::getName);
             File templateDirectory = findTemplateDirectory(sqlObjectType);
+            if (templateDirectory == null || !templateDirectory.exists()) {
+                throw new IllegalStateException("No template directory found for class " + sqlObjectType);
+            }
             findTemplateOrFail(templateDirectory, templateName);
             return templateName;
         };
