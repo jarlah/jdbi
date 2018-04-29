@@ -22,19 +22,16 @@ import org.jdbi.v3.freemarker.internal.UseFreemarkerSqlLocatorImpl;
 import org.jdbi.v3.sqlobject.config.ConfiguringAnnotation;
 
 /**
- * Configures SQL Object to locate SQL using the {@link FreemarkerSqlLocator#findStringTemplate(Class, String)}
- * method. If the SQL annotation (e.g. <code>@SqlQuery</code>) defines a value (e.g. <code>@SqlQuery("hello")</code>),
- * that value (<code>"hello"</code>) will be used for the <code>name</code> parameter; if undefined, the name of the SQL
- * object method will be used:
+ * Configures SQL Object to locate SQL using the {@link FreemarkerSqlLocator} class.
  *
  * <pre>
- *     &#064;UseStringTemplateSqlLocator
+ *     &#064;UseFreemarkerSqlLocator
  *     interface Viccini {
  *         &#064;SqlUpdate
- *         void doTheThing(long id);     // =&gt; StringTemplateSqlLocator.findStringTemplateSql(Viccini.class, "doTheThing")
+ *         void doTheThing(long id);
  *
  *         &#064;SqlUpdate("thatOtherThing")
- *         void doTheThing(String name); // =&gt; StringTemplateSqlLocator.findStringTemplateSql(Viccini.class, "thatOtherThing")
+ *         void doTheThing(String name);
  *     }
  * </pre>
  */

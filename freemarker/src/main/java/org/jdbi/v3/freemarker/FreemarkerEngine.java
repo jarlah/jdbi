@@ -17,7 +17,7 @@ import org.jdbi.v3.core.statement.TemplateEngine;
 import org.jdbi.v3.core.statement.StatementContext;
 
 /**
- * Rewrites a StringTemplate template, using the attributes on the {@link StatementContext} as template parameters.
+ * Rewrites a Freemarker template, using the attributes on the {@link StatementContext} as template parameters.
  */
 public class FreemarkerEngine implements TemplateEngine {
     @Override

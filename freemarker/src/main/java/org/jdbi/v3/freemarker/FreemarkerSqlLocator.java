@@ -26,7 +26,7 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 
 /**
- * Locates SQL in <code>.ftl/code> Freemarker files on the classpath.
+ * Locates SQL in <code>.sql.ftl/code> Freemarker files on the classpath.
  */
 public class FreemarkerSqlLocator {
     private static final Map<String, Template> CACHE = ExpiringMap.builder()
@@ -56,12 +56,16 @@ public class FreemarkerSqlLocator {
     public static Template findTemplate(File templateDirectory, String templateName) {
         File templateFile = new File(templateDirectory, templateName + ".sql.ftl");
         return CACHE.computeIfAbsent(templateFile.getPath(), (p) -> {
+            Exception ex;
             try {
                 if (templateFile.exists()) {
                     return new Template(templateName, new FileReader(templateFile), CONFIGURATION);
                 }
-            } catch (Exception e) {}
-            throw new IllegalStateException("Failed to load Freemarker template " + templateName + " in " + templateDirectory.getAbsolutePath());
+                ex = new IllegalStateException("Template file " + templateFile.getPath() + " does not exist");
+            } catch (Exception templateLoadingException) {
+                ex = templateLoadingException;
+            }
+            throw new IllegalStateException("Failed to load Freemarker template " + templateName + " in " + templateDirectory.getAbsolutePath(), ex);
         });
     }
 }
