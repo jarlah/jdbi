@@ -17,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jdbi.v3.core.rule.H2DatabaseRule;
 import org.jdbi.v3.core.Handle;
@@ -67,6 +69,28 @@ public class TestFreemarkerSqlLocator {
     }
 
     @Test
+    public void testDefinedList() throws Exception {
+        handle.execute("insert into something (id, name) values (6, 'Martin')");
+        handle.execute("insert into something (id, name) values (7, 'Peter')");
+
+        List<String> s = handle.attach(Wombat.class).findNamesForIds(Arrays.asList(6,7));
+        assertThat(s.size()).isEqualTo(2);
+        assertThat(s.get(0)).isEqualTo("Martin");
+        assertThat(s.get(1)).isEqualTo("Peter");
+    }
+
+    @Test
+    public void testDefinedBeanList() throws Exception {
+        handle.execute("insert into something (id, name) values (6, 'Martin')");
+        handle.execute("insert into something (id, name) values (7, 'Peter')");
+
+        List<String> s = handle.attach(Wombat.class).findNamesForSomethings(Arrays.asList(new Something(6, "Martin"), new Something(7, "Peter")));
+        assertThat(s.size()).isEqualTo(2);
+        assertThat(s.get(0)).isEqualTo("Martin");
+        assertThat(s.get(1)).isEqualTo("Peter");
+    }
+
+    @Test
     public void testBap() throws Exception {
         handle.execute("insert into something (id, name) values (2, 'Bean')");
         Wombat w = handle.attach(Wombat.class);
@@ -104,6 +128,12 @@ public class TestFreemarkerSqlLocator {
 
         @SqlQuery
         String findNameFor(@Bind("id") int id);
+
+        @SqlQuery
+        List<String> findNamesForIds(@Define("ids") List<Integer> ids);
+
+        @SqlQuery
+        List<String> findNamesForSomethings(@Define("somethings") List<Something> somethings);
 
         @SqlUpdate
         void weirdInsert(@Define("table") String table,
