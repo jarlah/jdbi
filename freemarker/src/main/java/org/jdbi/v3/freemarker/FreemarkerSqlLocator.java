@@ -33,7 +33,7 @@ public class FreemarkerSqlLocator {
             .expiration(10, TimeUnit.MINUTES)
             .expirationPolicy(ExpirationPolicy.ACCESSED)
             .build();
-    
+
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_28);
 
     private FreemarkerSqlLocator() {}
@@ -41,16 +41,16 @@ public class FreemarkerSqlLocator {
     public static Template findStringTemplate(Class<?> type, String name) {
         return null;
     }
-    
+
     public static File findTemplateDirectory(Class<?> type) {
         try {
-			String classFolder = type.getName().replace(".", "/");
-			URL resource = type.getClassLoader().getResource(classFolder);
-			if (resource != null) {
-				return new File(resource.toURI());
-			}
-		} catch (URISyntaxException ignored) {}
-		return null;
+            String classFolder = type.getName().replace(".", "/");
+            URL resource = type.getClassLoader().getResource(classFolder);
+            if (resource != null) {
+                return new File(resource.toURI());
+            }
+        } catch (URISyntaxException ignored) { }
+        return null;
     }
 
     public static Template findTemplateOrFail(File templateDirectory, String templateName) {

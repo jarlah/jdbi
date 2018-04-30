@@ -13,7 +13,8 @@
  */
 package org.jdbi.v3.freemarker.internal;
 
-import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.*;
+import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.findTemplateOrFail;
+import static org.jdbi.v3.freemarker.FreemarkerSqlLocator.findTemplateDirectory;
 
 import java.io.File;
 import java.io.IOException;

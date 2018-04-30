@@ -34,7 +34,7 @@ public class FreemarkerEngine implements TemplateEngine {
             StringWriter writer = new StringWriter();
             template.process(ctx.getAttributes(), writer);
             return writer.toString();
-        } catch (IOException|TemplateException e) {
+        } catch (IOException | TemplateException e) {
             throw new IllegalStateException("Failed to process template: " + sql, e);
         }
 
